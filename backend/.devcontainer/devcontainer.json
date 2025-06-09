@@ -1,0 +1,26 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/java
+{
+  "name": "Java Spring Boot",
+  "image": "mcr.microsoft.com/devcontainers/java:1-21-bullseye",
+  "features": {
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "none",
+      "installGradle": "true"
+    },
+    "ghcr.io/devcontainers/features/git:1": {
+      "ppa": true,
+      "version": "latest"
+    }
+  },
+  "forwardPorts": [8080],
+  "postCreateCommand": "java -version && gradle --version",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vscjava.vscode-java-pack",
+        "pivotal.vscode-spring-boot"
+      ]
+    }
+  }
+}

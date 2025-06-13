@@ -11,10 +11,13 @@
     "ghcr.io/devcontainers/features/git:1": {
       "ppa": true,
       "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "lts"
     }
   },
   "forwardPorts": [8080],
-  "postCreateCommand": "java -version && gradle --version",
+  "postCreateCommand": "java -version && gradle --version && npm install -g @usebruno/cli",
   "customizations": {
     "vscode": {
       "extensions": [

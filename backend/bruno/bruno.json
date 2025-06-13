@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "llm_server",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

@@ -1,0 +1,19 @@
+meta {
+  name: test_prompt
+  type: http
+  seq: 1
+}
+
+post {
+  url: https://potential-potato-55qx99pqj673qxv-8080.app.github.dev/api/llm/prompt
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {"prompt":"Tell me a fun fact about Switzerland."}
+}

@@ -39,7 +39,12 @@ public class LlmService {
                 .bodyValue(llmRequest)
                 .retrieve()
                 .bodyToMono(LlmResponse.class)
-                .map(this::extractTextFromResponse);
+                .map(this::extractTextFromResponse)
+                .onErrorResume(e -> {
+                    System.err.println("Error calling LLM API: " + e.getMessage());
+                    return Mono.just("Sorry, an error occurred while contacting the LLM service.");
+                })
+                ;
     }
 
     // @param response The LlmResponse object from the API.

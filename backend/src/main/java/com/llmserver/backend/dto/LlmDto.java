@@ -16,7 +16,7 @@ public class LlmDto {
     public record PromptRequest(String prompt) {}
     public record PromptResponse(String text) {}
 
-    // Backend
+    // LLM Service
     public record Part(String text) {};
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public record Content(List<Part> parts, String role) {};

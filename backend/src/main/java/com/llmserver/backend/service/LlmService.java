@@ -21,14 +21,15 @@ public class LlmService {
     public LlmService(
         WebClient.Builder webClientBuilder,
         @Value("${llm.api.url}") String apiUrl,
-        @Value("${llm.api.key}") String apiKey) {
+        @Value("${llm.api.key}") String apiKey
+    ) {
         this.webClient = webClientBuilder.baseUrl(apiUrl).build();
         this.apiKey = apiKey;
     }
 
     // @param prompt The user's prompt text.
     // @return A Mono emitting the LLM's response text.
-    public Mono<String> promptLlmm(String prompt) {
+    public Mono<String> promptLlm(String prompt) {
         Part part = new Part(prompt);
         Content content = new Content(Collections.singletonList(part), "user");
         LlmRequest llmRequest = new LlmRequest(Collections.singletonList(content));
@@ -56,6 +57,6 @@ public class LlmService {
                 return firstCandidate.content().parts().get(0).text();
             }
         }
-        return "Sorry, I couldn't get a response.";
+        return "Unable to get a response.";
     }
 }

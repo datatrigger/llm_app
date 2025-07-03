@@ -4,48 +4,50 @@ import com.llmserver.backend.dto.LlmDto.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
+import org.springframework.web.client.RestClient;
 import java.util.Collections;
 import java.util.List;
 
 @Service
 public class LlmService {
 
-    private final WebClient webClient;
-    private final String apiKey;
+    private final RestClient restClient;
  
     // @param webClientBuilder The WebClient builder provided by Spring Boot.
     // @param apiUrl The URL of the LLM API, injected from application.properties.
     // @param apiKey The API key for the LLM API, injected from application.properties.
     public LlmService(
-        WebClient.Builder webClientBuilder,
+        RestClient.Builder restClientBuilder,
         @Value("${llm.api.url}") String apiUrl,
         @Value("${llm.api.key}") String apiKey
     ) {
-        this.webClient = webClientBuilder.baseUrl(apiUrl).build();
-        this.apiKey = apiKey;
+        this.restClient = restClientBuilder
+            .baseUrl(apiUrl)
+            .defaultUriVariables(Collections.singletonMap("key", apiKey))
+            .build()
+            ;
     }
 
     // @param prompt The user's prompt text.
-    // @return A Mono emitting the LLM's response text.
-    public Mono<String> promptLlm(String prompt) {
+    // @return The LLM's response text.
+    public String promptLlm(String prompt) {
         Part part = new Part(prompt);
         Content content = new Content(Collections.singletonList(part), "user");
         LlmRequest llmRequest = new LlmRequest(Collections.singletonList(content));
 
-        return webClient.post()
-                .uri(uriBuilder -> uriBuilder.queryParam("key", apiKey).build())
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(llmRequest)
-                .retrieve()
-                .bodyToMono(LlmResponse.class)
-                .map(this::extractTextFromResponse)
-                .onErrorResume(e -> {
-                    System.err.println("Error calling LLM API: " + e.getMessage());
-                    return Mono.just("Sorry, an error occurred while contacting the LLM service.");
-                })
-                ;
+        try {
+            LlmResponse response = restClient.post()
+                    .uri(uriBuilder -> uriBuilder.queryParam("key", "{key}").build())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(llmRequest)
+                    .retrieve()
+                    .body(LlmResponse.class);
+                    
+            return extractTextFromResponse(response);
+        } catch (Exception e) {
+            System.err.println("Error calling LLM API: " + e.getMessage());
+            return "Could not get a response from the LLM.";
+        }
     }
 
     // @param response The LlmResponse object from the API.

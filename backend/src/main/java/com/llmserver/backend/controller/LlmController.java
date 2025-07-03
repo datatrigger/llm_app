@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/api/llm")
@@ -20,9 +19,10 @@ public class LlmController {
     }
 
     // @param request The request from the frontend containing the user's prompt.
-    // @return A Mono containing the response for the frontend.
+    // @return The response for the frontend.
     @PostMapping("/prompt")
-    public Mono<PromptResponse> getLlmResponse(@RequestBody PromptRequest request) {
-        return llmService.promptLlm(request.prompt()).map(PromptResponse::new);
+    public PromptResponse getLlmResponse(@RequestBody PromptRequest request) {
+        String responseText = llmService.promptLlm(request.prompt());
+        return new PromptResponse(responseText);
     }
 }

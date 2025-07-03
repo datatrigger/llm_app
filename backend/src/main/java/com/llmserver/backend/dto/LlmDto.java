@@ -13,8 +13,8 @@ import java.util.List;
 public class LlmDto {
     
     // Frontend
-    public record PromptRequest(String prompt) {}
-    public record PromptResponse(String text) {}
+    public record PromptRequest(String prompt, String userId, String conversationId) {}
+    public record PromptResponse(String text, String conversationId) {}
 
     // LLM Service
     public record Part(String text) {};

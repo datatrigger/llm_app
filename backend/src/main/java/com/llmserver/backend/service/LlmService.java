@@ -1,12 +1,14 @@
 package com.llmserver.backend.service;
 
 import com.llmserver.backend.dto.LlmDto.*;
+import com.llmserver.backend.entity.Message;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import java.util.Collections;
 import java.util.List;
+import java.util.ArrayList;
 
 @Service
 public class LlmService {
@@ -31,9 +33,28 @@ public class LlmService {
     // @param prompt The user's prompt text.
     // @return The LLM's response text.
     public String promptLlm(String prompt) {
-        Part part = new Part(prompt);
-        Content content = new Content(Collections.singletonList(part), "user");
-        LlmRequest llmRequest = new LlmRequest(Collections.singletonList(content));
+        return promptLlmWithHistory(prompt, Collections.emptyList());
+    }
+
+    // @param prompt The user's current prompt.
+    // @param conversationHistory The list of previous messages in the conversation.
+    // @return The LLM's response text.
+    public String promptLlmWithHistory(String prompt, List<Message> conversationHistory) {
+        List<Content> contents = new ArrayList<>();
+        
+        // Add conversation history
+        for (Message message : conversationHistory) {
+            Part part = new Part(message.getText());
+            Content content = new Content(Collections.singletonList(part), message.getRole());
+            contents.add(content);
+        }
+        
+        // Add current user prompt
+        Part currentPart = new Part(prompt);
+        Content currentContent = new Content(Collections.singletonList(currentPart), "user");
+        contents.add(currentContent);
+        
+        LlmRequest llmRequest = new LlmRequest(contents);
 
         try {
             LlmResponse response = restClient.post()

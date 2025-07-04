@@ -105,13 +105,21 @@ public class ConversationService {
      */
     public boolean conversationExists(String userId, String conversationId) {
         try {
-            DocumentReference conversation = firestore
+            // .exists() returns False even on existing subcollections
+            // because they are not actual documents. Hence the need to check
+            // for any messages in the subcollection with the given `conversationId`
+            List<QueryDocumentSnapshot> messages = firestore
                 .collection("users")
                 .document(userId)
                 .collection("conversations")
-                .document(conversationId);
+                .document(conversationId)
+                .collection("messages")
+                .limit(1)
+                .get()
+                .get()
+                .getDocuments();
             
-            return conversation.get().get().exists();
+            return !messages.isEmpty();
 
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException("Failed to check conversation existence", e);

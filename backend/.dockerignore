@@ -1,0 +1,15 @@
+# Build output
+build/
+.gradle/
+*.jar
+
+# Git
+.gitattributes
+.gitignore
+
+# Test files
+src/test/
+bruno/
+
+# Others
+dev.sh

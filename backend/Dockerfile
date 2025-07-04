@@ -9,7 +9,7 @@ COPY settings.gradle.kts .
 RUN chmod +x gradlew
 
 # Build
-COPY src/main src/main
+COPY src src/
 RUN ./gradlew build -x test --no-daemon
 RUN cp build/libs/*.jar app.jar
 

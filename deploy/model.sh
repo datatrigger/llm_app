@@ -1,4 +1,5 @@
 # Deploy gemma 3 4b
+# Hardcoded --region europe-west1 because no GPU available in $REGION
 gcloud run deploy llm-server \
    --image us-docker.pkg.dev/cloudrun/container/gemma/gemma3-4b \
    --cpu 8 \

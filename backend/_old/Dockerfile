@@ -10,7 +10,7 @@ RUN chmod +x gradlew
 
 # Build
 COPY src src/
-RUN ./gradlew build -x test --no-daemon
+RUN ./gradlew bootJar -x test --no-daemon
 RUN cp build/libs/*.jar app.jar
 
 # Run

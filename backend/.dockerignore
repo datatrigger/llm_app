@@ -1,7 +1,7 @@
 # Build output
 build/
 .gradle/
-*.jar
+gradlew.bat
 
 # Git
 .gitattributes

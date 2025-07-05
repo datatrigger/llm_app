@@ -1,5 +1,4 @@
-export API_KEY='<API_KEY>'
-
+# Deploy gemma 3 4b
 gcloud run deploy llm-server \
    --image us-docker.pkg.dev/cloudrun/container/gemma/gemma3-4b \
    --cpu 8 \
@@ -15,8 +14,7 @@ gcloud run deploy llm-server \
    --timeout=600 \
    --region europe-west1
 
-export CLOUD_RUN_URL='<CLOUD_RUN_URL>'
-
+# Example request
 curl "$CLOUD_RUN_URL/v1beta/models/gemma-3-4b-it:generateContent?key=$API_KEY" \
    -H 'Content-Type: application/json' \
    -X POST \

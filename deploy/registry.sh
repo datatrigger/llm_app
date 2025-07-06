@@ -1,4 +1,3 @@
-
 gcloud artifacts repositories create docker-repo \
     --repository-format=docker \
     --location=europe-west6 \

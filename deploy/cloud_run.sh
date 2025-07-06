@@ -3,6 +3,11 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
   --member="serviceAccount:$PROJECT_NUMBER-compute@developer.gserviceaccount.com" \
   --role="roles/datastore.user"
 
+# Secrets permission
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+  --member="serviceAccount:$PROJECT_NUMBER-compute@developer.gserviceaccount.com" \
+  --role="roles/secretmanager.secretAccessor"
+
 # Cloud run
 gcloud run deploy llm-backend \
   --image=europe-west6-docker.pkg.dev/llm-server-461514/docker-repo/backend:latest \

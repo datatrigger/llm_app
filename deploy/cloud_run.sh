@@ -10,7 +10,7 @@ gcloud run deploy llm-backend \
   --region=europe-west6 \
   --allow-unauthenticated \
   --port=8080 \
-  --set-env-vars="API_KEY=$API_KEY,CLOUD_RUN_URL=$CLOUD_RUN_URL" \
+  --set-env-vars="API_KEY=$API_KEY,LLM_URL=$LLM_URL" \
   --memory=1Gi \
   --cpu=1 \
   --min-instances=0 \

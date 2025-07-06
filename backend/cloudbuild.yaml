@@ -1,0 +1,35 @@
+steps:
+  # Build the Docker image using Cloud Native Buildpacks
+  - name: 'gcr.io/k8s-skaffold/pack'
+    args:
+      - 'build'
+      - 'europe-west6-docker.pkg.dev/$PROJECT_ID/docker-repo/backend:latest'
+      - '--builder=gcr.io/buildpacks/builder'
+      - '--path=backend'
+    id: 'Build'
+
+  # Push the image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'europe-west6-docker.pkg.dev/$PROJECT_ID/docker-repo/backend:latest'
+    id: 'Push'
+
+  # Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'llm-backend'
+      - '--image=europe-west6-docker.pkg.dev/$PROJECT_ID/docker-repo/backend:latest'
+      - '--platform=managed'
+      - '--region=europe-west6'
+      - '--allow-unauthenticated'
+      - '--port=8080'
+      - '--set-secrets=API_KEY=API_KEY:latest,LLM_URL=LLM_URL:latest'
+      - '--memory=1Gi'
+      - '--cpu=1'
+      - '--min-instances=0'
+      - '--max-instances=1'
+    id: 'Deploy'

@@ -16,7 +16,7 @@ gcloud run deploy llm-server \
    --region europe-west1
 
 # Example request
-curl "$CLOUD_RUN_URL/v1beta/models/gemma-3-4b-it:generateContent?key=$API_KEY" \
+curl "$LLM_URL/v1beta/models/gemma-3-4b-it:generateContent?key=$API_KEY" \
    -H 'Content-Type: application/json' \
    -X POST \
    -d '{

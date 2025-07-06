@@ -34,5 +34,4 @@ steps:
       - '--max-instances=1'
     id: 'Deploy'
 
-options:
-  logsBucket: 'gs://llm-server-cloud-build-logs'
+logsBucket: 'gs://llm-server-cloud-build-logs'

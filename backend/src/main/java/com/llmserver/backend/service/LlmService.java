@@ -72,7 +72,6 @@ public class LlmService {
         LlmRequest llmRequest = new LlmRequest(contents);
 
         try {
-            String token = getAccessToken();
             LlmResponse response = restClient.post()
                     .uri(uriBuilder -> uriBuilder.queryParam("key", "{key}").build())
                     .contentType(MediaType.APPLICATION_JSON)

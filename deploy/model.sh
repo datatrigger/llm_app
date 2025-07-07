@@ -33,7 +33,8 @@ gcloud run deploy llm-server \
    --cpu 8 \
    --concurrency 4 \
    --set-env-vars OLLAMA_NUM_PARALLEL=4 \
-   --set-secrets=API_KEY=API_KEY:latest \
+   --set-secrets API_KEY=API_KEY:latest \
+   --no-allow-unauthenticated \
    --gpu 1 \
    --gpu-type nvidia-l4 \
    --max-instances 1 \

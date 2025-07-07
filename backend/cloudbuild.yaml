@@ -34,4 +34,17 @@ steps:
       - '--max-instances=1'
     id: 'Deploy'
 
+  # Grant permission to invoke the LLM service
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args:
+      - 'run'
+      - 'services'
+      - 'add-iam-policy-binding'
+      - 'llm-server'
+      - '--region=europe-west1'
+      - '--member=serviceAccount:$PROJECT_NUMBER-compute@developer.gserviceaccount.com'
+      - '--role=roles/run.invoker'
+    id: 'Grant-Permissions'
+    
 logsBucket: 'gs://llm-server-cloud-build-logs'

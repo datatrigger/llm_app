@@ -3,12 +3,15 @@ package com.llmserver.backend.service;
 import com.llmserver.backend.dto.LlmDto.*;
 import com.llmserver.backend.entity.Message;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
+import java.io.IOException;
+import com.google.auth.oauth2.GoogleCredentials;
 
 @Service
 public class LlmService {
@@ -26,8 +29,21 @@ public class LlmService {
         this.restClient = restClientBuilder
             .baseUrl(apiUrl)
             .defaultUriVariables(Collections.singletonMap("key", apiKey))
+            .defaultHeader("Authorization", "Bearer " + getAccessToken())
             .build()
             ;
+    }
+
+    private String getAccessToken() {
+        try {
+            GoogleCredentials credentials = GoogleCredentials.getApplicationDefault()
+                .createScoped("https://www.googleapis.com/auth/cloud-platform");
+            credentials.refreshIfExpired();
+            return credentials.getAccessToken().getTokenValue();
+        } catch (IOException e) {
+            System.err.println("Failed to get access token: " + e.getMessage());
+            return "";
+        }
     }
 
     // @param prompt The user's prompt text.
@@ -57,9 +73,11 @@ public class LlmService {
         LlmRequest llmRequest = new LlmRequest(contents);
 
         try {
+            String token = getAccessToken();
             LlmResponse response = restClient.post()
                     .uri(uriBuilder -> uriBuilder.queryParam("key", "{key}").build())
                     .contentType(MediaType.APPLICATION_JSON)
+                    .header("Authorization", "Bearer " + getAccessToken())
                     .body(llmRequest)
                     .retrieve()
                     .body(LlmResponse.class);

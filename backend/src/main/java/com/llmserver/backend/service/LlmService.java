@@ -11,11 +11,15 @@ import java.util.List;
 import java.util.ArrayList;
 import java.io.IOException;
 import com.google.auth.oauth2.GoogleCredentials;
+import com.google.auth.oauth2.IdTokenCredentials;
+import com.google.auth.oauth2.IdTokenProvider;
 
 @Service
 public class LlmService {
 
     private final RestClient restClient;
+    private final String apiKey;
+    private final String llmBaseUrl;
  
     // @param webClientBuilder The WebClient builder provided by Spring Boot.
     // @param apiUrl The URL of the LLM API, injected from application.properties.
@@ -23,24 +27,31 @@ public class LlmService {
     public LlmService(
         RestClient.Builder restClientBuilder,
         @Value("${llm.api.url}") String apiUrl,
-        @Value("${llm.api.key}") String apiKey
+        @Value("${llm.api.key}") String apiKey,
+        @Value("${llm.base.url}") String llmBaseUrl
+
     ) {
+        this.apiKey = apiKey;
+        this.llmBaseUrl = llmBaseUrl;
         this.restClient = restClientBuilder
             .baseUrl(apiUrl)
-            .defaultUriVariables(Collections.singletonMap("key", apiKey))
-            .defaultHeader("Authorization", "Bearer " + getAccessToken())
-            .build()
-            ;
+            .build();
     }
 
-    private String getAccessToken() {
+    private String getIdTokenForCloudRun(String targetUrl) {
         try {
-            GoogleCredentials credentials = GoogleCredentials.getApplicationDefault()
-                .createScoped("https://www.googleapis.com/auth/cloud-platform");
-            credentials.refreshIfExpired();
-            return credentials.getAccessToken().getTokenValue();
+            GoogleCredentials credentials = GoogleCredentials.getApplicationDefault();
+            IdTokenProvider idTokenProvider = (IdTokenProvider) credentials;
+            IdTokenCredentials idTokenCredentials = IdTokenCredentials
+                .newBuilder()
+                .setIdTokenProvider(idTokenProvider)
+                .setTargetAudience(targetUrl)
+                .build();
+            idTokenCredentials.refreshIfExpired();
+            return idTokenCredentials.getIdToken().getTokenValue();
         } catch (IOException e) {
-            System.err.println("Failed to get access token: " + e.getMessage());
+            System.err.println("Failed to get ID token for Cloud Run: " + e.getMessage());
+            e.printStackTrace();
             return "";
         }
     }
@@ -72,10 +83,17 @@ public class LlmService {
         LlmRequest llmRequest = new LlmRequest(contents);
 
         try {
-            LlmResponse response = restClient.post()
-                    .uri(uriBuilder -> uriBuilder.queryParam("key", "{key}").build())
+            // Cloud Run service-to-service authentication
+            String idToken = getIdTokenForCloudRun(llmBaseUrl);
+            if (idToken.isEmpty()) {
+                throw new RuntimeException("Failed to obtain ID token for Cloud Run authentication");
+            }
+            
+            LlmResponse response = restClient
+                    .post()
+                    .uri(uriBuilder -> uriBuilder.queryParam("key", apiKey).build())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .header("Authorization", "Bearer " + getAccessToken())
+                    .header("Authorization", "Bearer " + idToken)
                     .body(llmRequest)
                     .retrieve()
                     .body(LlmResponse.class);
@@ -83,6 +101,7 @@ public class LlmService {
             return extractTextFromResponse(response);
         } catch (Exception e) {
             System.err.println("Error calling LLM API: " + e.getMessage());
+            e.printStackTrace();
             return "Could not get a response from the LLM.";
         }
     }

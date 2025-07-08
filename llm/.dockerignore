@@ -1,0 +1,3 @@
+dev_commands.sh
+*_test.go
+cloudbuild.yaml

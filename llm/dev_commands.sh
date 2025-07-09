@@ -1,9 +1,8 @@
 # test docker container
+docker build --pull --build-arg MODEL=$MODEL . -t gemma3
+docker run -d -p 8080:8080 --name gemma-proxy -e MODEL=$MODEL gemma3
 
-docker build --pull --build-arg MODEL=gemma3:4b . -t gemma3:4b
-docker run -d --name gemma-proxy -p 8080:8080 -e gemma3-4b
-
-curl -X POST https://obscure-space-fishstick-6wg4pp79gj5hxvjw-8080.app.github.dev/v1beta/models/gemma-3-4b-it:generateContent \
+curl -X POST https://fuzzy-system-rwgpxxv44pj25xrj-8080.app.github.dev/v1beta/models/gemma-3-4b-it:generateContent \
   -H "Content-Type: application/json" \
   -d '{
     "contents": [

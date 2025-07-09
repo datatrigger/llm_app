@@ -47,4 +47,4 @@ steps:
       - '--role=roles/run.invoker'
     id: 'Grant-Permissions'
     
-logsBucket: 'gs://llm-server-cloud-build-logs'
+logsBucket: 'gs://llm-backend-cloud-build-logs'

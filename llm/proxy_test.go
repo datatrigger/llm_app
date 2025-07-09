@@ -13,8 +13,6 @@ import (
 	"testing"
 )
 
-const apiKey = "some key"
-
 func TestProxy_GenerateContent(t *testing.T) {
 	expectedRequestBody := `{
 		"Stream":false,
@@ -90,7 +88,6 @@ func TestProxy_GenerateContent(t *testing.T) {
 	// 2. Set up the proxy server to point to the mock target
 	os.Setenv("PORT", "8085")                      // Use a test port
 	os.Setenv("OLLAMA_HOST", mockTargetServer.URL) // Ensure proxy targets the mock
-	os.Setenv("API_KEY", apiKey)
 
 	// Start the proxy server in a goroutine
 	go main()
@@ -116,7 +113,6 @@ func TestProxy_GenerateContent(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Error creating request: %v", err)
 	}
-	req.Header.Set("x-goog-api-key", apiKey)
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {

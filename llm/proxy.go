@@ -72,21 +72,8 @@ func modifyStreamResponse(resp *http.Response) error {
 	return nil
 }
 
-func getApiKey() (string, error) {
-	apiKey := os.Getenv("API_KEY")
-	if apiKey == "" {
-		return "", fmt.Errorf("environment variable 'API_KEY' is required")
-	}
-	return apiKey, nil
-}
-
 func main() {
 	// --- Configuration ---
-	envApiKey, err := getApiKey()
-	if err != nil {
-		log.Fatalf("Error reading API_KEY env var: %v", err)
-	}
-
 	port := os.Getenv("PORT")
 	targetURLStr := os.Getenv("OLLAMA_HOST")
 	if port == "" {
@@ -105,13 +92,13 @@ func main() {
 	proxy := httputil.NewSingleHostReverseProxy(targetURL)
 	// --- Http Handler ---
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("Received URL apth: %s", r.URL.Path)
+		log.Printf("Received URL path: %s", r.URL.Path)
 
 		re := regexp.MustCompile(geminiAPIPathRegexPattern)
 		matches := re.FindStringSubmatch(r.URL.Path)
 
 		var (
-			isCurrentRequestGeminiStyle bool = false
+			isCurrentRequestGeminiStyle bool   = false
 			actionForResponse           string // Stores action for response modification
 		)
 
@@ -136,16 +123,6 @@ func main() {
 				return
 			}
 
-			queryParams := r.URL.Query()
-			requestApiKey := r.Header.Get("x-goog-api-key")
-			if requestApiKey == "" {
-				requestApiKey = queryParams.Get("key")
-			}
-			if requestApiKey != envApiKey {
-				log.Printf("Invalid API key provided in the request.")
-				http.Error(w, "Permission denied. Invalid API Key.  Configure your SDK to use this URL, and use the API key provided at deployment (https://github.com/google-gemini/gemma-cookbook/blob/main/Demos/Gemma-on-Cloudrun/README.md)", http.StatusForbidden)
-				return
-			}
 			// 1. Read original request body
 			originalBodyBytes, err := io.ReadAll(r.Body)
 			if err != nil {
@@ -184,18 +161,6 @@ func main() {
 		} else {
 			log.Printf("URL path does not match the expected format. No conversion applied.")
 			isCurrentRequestGeminiStyle = false
-
-			apiKey := r.Header.Get("Authorization")
-			expectedPrefix := "Bearer "
-			if apiKey == "" {
-				apiKey = r.URL.Query().Get("key")
-				expectedPrefix = ""
-			}
-			if apiKey != expectedPrefix + envApiKey {
-				log.Printf("Invalid API key provided in the request.")
-				http.Error(w, "Permission denied. Invalid API Key.  Configure your SDK to use this URL, and use the API key provided at deployment (https://github.com/google-gemini/gemma-cookbook/blob/main/Demos/Gemma-on-Cloudrun/README.md)", http.StatusForbidden)
-				return
-			}
 
 			proxy.Director = func(req *http.Request) {
 				req.URL.Scheme = targetURL.Scheme

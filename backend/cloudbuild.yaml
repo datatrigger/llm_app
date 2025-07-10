@@ -3,17 +3,17 @@ steps:
   - name: 'gcr.io/k8s-skaffold/pack'
     args:
       - 'build'
-      - 'europe-west6-docker.pkg.dev/$PROJECT_ID/docker-repo/backend:latest'
+      - 'europe-west6-docker.pkg.dev/$PROJECT_ID/docker-repo/llm-backend:latest'
       - '--builder=gcr.io/buildpacks/builder'
       - '--path=backend'
-    id: 'Build'
+    id: 'build'
 
   # Push the image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'push'
-      - 'europe-west6-docker.pkg.dev/$PROJECT_ID/docker-repo/backend:latest'
-    id: 'Push'
+      - 'europe-west6-docker.pkg.dev/$PROJECT_ID/docker-repo/llm-backend:latest'
+    id: 'push'
 
   # Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -22,7 +22,7 @@ steps:
       - 'run'
       - 'deploy'
       - 'llm-backend'
-      - '--image=europe-west6-docker.pkg.dev/$PROJECT_ID/docker-repo/backend:latest'
+      - '--image=europe-west6-docker.pkg.dev/$PROJECT_ID/docker-repo/llm-backend:latest'
       - '--platform=managed'
       - '--region=europe-west6'
       - '--allow-unauthenticated'
@@ -32,7 +32,7 @@ steps:
       - '--cpu=1'
       - '--min-instances=0'
       - '--max-instances=1'
-    id: 'Deploy'
+    id: 'deploy'
 
   # Grant permission to invoke the LLM service
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -45,6 +45,6 @@ steps:
       - '--region=europe-west1'
       - '--member=serviceAccount:$PROJECT_NUMBER-compute@developer.gserviceaccount.com'
       - '--role=roles/run.invoker'
-    id: 'Grant-Permissions'
+    id: 'grant-permissions'
     
 logsBucket: 'gs://llm-backend-cloud-build-logs'

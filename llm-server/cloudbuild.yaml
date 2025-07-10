@@ -1,0 +1,44 @@
+substitutions:
+  _MODEL: 'gemma3:4b'
+  
+steps:
+  # Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'docker'
+      - 'build'
+      - '--pull'
+      - '--build-arg'
+      - 'MODEL=${_MODEL}'
+      - '--tag'
+      - 'europe-west6-docker.pkg.dev/$PROJECT_ID/docker-repo/llm-server:latest'
+      - 'llm-server'
+    id: 'build'
+
+  # Push the image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'europe-west6-docker.pkg.dev/$PROJECT_ID/docker-repo/llm-server:latest'
+    id: 'push'
+
+  # Deploy to Cloud Run
+  - name: 'gcr.io/cloud-builders/gcloud'
+    id: 'deploy-to-cloud-run'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'llm-server'
+      - '--image=europe-west6-docker.pkg.dev/$PROJECT_ID/docker-repo/llm-server:latest'
+      - '--cpu=8'
+      - '--concurrency=4'
+      - '--set-env-vars=OLLAMA_NUM_PARALLEL=4'
+      - '--no-allow-unauthenticated'
+      - '--gpu=1'
+      - '--gpu-type=nvidia-l4'
+      - '--max-instances=1'
+      - '--memory=32Gi'
+      - '--timeout=180'
+      - '--region=europe-west1'
+    
+logsBucket: 'gs://llm-server-cloud-build-logs'

@@ -27,22 +27,6 @@ curl "$LLM_URL/v1beta/models/gemma-3-4b-it:generateContent?key=$API_KEY" \
        }]
       }'
 
-# Prod
-gcloud run deploy llm-server \
-   --image us-docker.pkg.dev/cloudrun/container/gemma/gemma3-4b \
-   --cpu 8 \
-   --concurrency 4 \
-   --set-env-vars OLLAMA_NUM_PARALLEL=4 \
-   --set-secrets API_KEY=API_KEY:latest \
-   --no-allow-unauthenticated \
-   --gpu 1 \
-   --gpu-type nvidia-l4 \
-   --max-instances 1 \
-   --memory 32Gi \
-   --no-cpu-throttling \
-   --timeout=600 \
-   --region europe-west1
-
 # Example request
 curl "$LLM_URL/v1beta/models/gemma-3-4b-it:generateContent" \
   -H "Authorization: Bearer $(gcloud auth print-identity-token)" \

@@ -18,20 +18,16 @@ import com.google.auth.oauth2.IdTokenProvider;
 public class LlmService {
 
     private final RestClient restClient;
-    private final String apiKey;
     private final String llmBaseUrl;
  
     // @param webClientBuilder The WebClient builder provided by Spring Boot.
     // @param apiUrl The URL of the LLM API, injected from application.properties.
-    // @param apiKey The API key for the LLM API, injected from application.properties.
     public LlmService(
         RestClient.Builder restClientBuilder,
         @Value("${llm.api.url}") String apiUrl,
-        @Value("${llm.api.key}") String apiKey,
         @Value("${llm.base.url}") String llmBaseUrl
 
     ) {
-        this.apiKey = apiKey;
         this.llmBaseUrl = llmBaseUrl;
         this.restClient = restClientBuilder
             .baseUrl(apiUrl)
@@ -91,7 +87,6 @@ public class LlmService {
             
             LlmResponse response = restClient
                     .post()
-                    .uri(uriBuilder -> uriBuilder.queryParam("key", apiKey).build())
                     .contentType(MediaType.APPLICATION_JSON)
                     .header("Authorization", "Bearer " + idToken)
                     .body(llmRequest)

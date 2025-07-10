@@ -1,4 +1,3 @@
-// .devcontainer/devcontainer.json
 {
   "name": "Angular Frontend",
   "image": "mcr.microsoft.com/devcontainers/typescript-node:20",

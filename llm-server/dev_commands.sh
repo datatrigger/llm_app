@@ -1,3 +1,7 @@
+# gcloud commands
+gcloud init
+gcloud auth application-default login
+
 # test docker container
 docker build --pull --build-arg MODEL=$MODEL . -t gemma3
 docker run -d -p 8080:8080 --name gemma-proxy -e MODEL=$MODEL gemma3

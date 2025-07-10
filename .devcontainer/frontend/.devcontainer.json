@@ -2,7 +2,6 @@
 {
   "name": "Angular Frontend",
   "image": "mcr.microsoft.com/devcontainers/typescript-node:20",
-  
   "customizations": {
     "vscode": {
       "extensions": [
@@ -11,7 +10,6 @@
       ]
     }
   },
-
   "forwardPorts": [4200],
   "portsAttributes": {
     "4200": {
@@ -19,8 +17,6 @@
       "protocol": "http"
     }
   },
-
   "postCreateCommand": "npm install -g @angular/cli",
-  
   "remoteUser": "node"
 }

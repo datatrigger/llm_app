@@ -1,0 +1,26 @@
+// .devcontainer/devcontainer.json
+{
+  "name": "Angular Frontend",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:20",
+  
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "angular.ng-template",
+        "ms-vscode.vscode-typescript-next"
+      ]
+    }
+  },
+
+  "forwardPorts": [4200],
+  "portsAttributes": {
+    "4200": {
+      "label": "Angular Dev Server",
+      "protocol": "http"
+    }
+  },
+
+  "postCreateCommand": "npm install -g @angular/cli",
+  
+  "remoteUser": "node"
+}

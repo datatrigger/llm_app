@@ -24,13 +24,13 @@ public class LlmService {
     // @param apiUrl The URL of the LLM API, injected from application.properties.
     public LlmService(
         RestClient.Builder restClientBuilder,
-        @Value("${llm.api.url}") String apiUrl,
-        @Value("${llm.base.url}") String llmBaseUrl
+        @Value("${llm.base.url}") String baseUrl,
+        @Value("${llm.api.path}") String apiPath
 
     ) {
-        this.llmBaseUrl = llmBaseUrl;
+        this.llmBaseUrl = baseUrl;
         this.restClient = restClientBuilder
-            .baseUrl(apiUrl)
+            .baseUrl(baseUrl + apiPath)
             .build();
     }
 

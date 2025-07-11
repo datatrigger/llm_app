@@ -85,7 +85,8 @@ import { Message } from './models/message.model';
       height: 100vh;
       max-width: 800px;
       margin: 0 auto;
-      background: #fff;
+      background: #0a0a0a;
+      box-shadow: 0 0 20px rgba(0, 255, 100, 0.1);
     }
 
     .chat-header {
@@ -93,34 +94,44 @@ import { Message } from './models/message.model';
       justify-content: space-between;
       align-items: center;
       padding: 1rem 2rem;
-      border-bottom: 1px solid #e5e5e5;
-      background: #f8f9fa;
+      border-bottom: 1px solid #1a1a1a;
+      background: linear-gradient(135deg, #111111 0%, #1a1a1a 100%);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
     }
 
     .chat-header h1 {
       margin: 0;
       font-size: 1.5rem;
-      color: #333;
+      color: #00ff64;
+      font-weight: 700;
+      text-shadow: 0 0 10px rgba(0, 255, 100, 0.3);
     }
 
     .new-conversation-btn {
-      padding: 0.5rem 1rem;
-      background: #007bff;
-      color: white;
+      padding: 0.6rem 1.2rem;
+      background: linear-gradient(135deg, #00ff64 0%, #00cc50 100%);
+      color: #000;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
       font-size: 0.9rem;
-      transition: background-color 0.2s;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 255, 100, 0.2);
     }
 
     .new-conversation-btn:hover:not(:disabled) {
-      background: #0056b3;
+      background: linear-gradient(135deg, #00cc50 0%, #00aa42 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 255, 100, 0.3);
     }
 
     .new-conversation-btn:disabled {
-      background: #6c757d;
+      background: #333;
+      color: #666;
       cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
     }
 
     .messages-container {
@@ -130,6 +141,7 @@ import { Message } from './models/message.model';
       display: flex;
       flex-direction: column;
       gap: 1rem;
+      background: #0a0a0a;
     }
 
     .empty-state {
@@ -139,14 +151,15 @@ import { Message } from './models/message.model';
     }
 
     .empty-state h2 {
-      color: #333;
+      color: #00ff64;
       margin-bottom: 0.5rem;
+      font-weight: 600;
     }
 
     .input-container {
       padding: 1rem;
-      border-top: 1px solid #e5e5e5;
-      background: #f8f9fa;
+      border-top: 1px solid #1a1a1a;
+      background: linear-gradient(135deg, #111111 0%, #1a1a1a 100%);
     }
 
     .message-form {
@@ -161,35 +174,55 @@ import { Message } from './models/message.model';
 
     .message-input {
       flex: 1;
-      padding: 0.75rem;
-      border: 1px solid #ddd;
-      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      border: 1px solid #333;
+      border-radius: 12px;
       resize: none;
       min-height: 20px;
       max-height: 120px;
       font-family: inherit;
       font-size: 1rem;
       line-height: 1.4;
+      background: #1a1a1a;
+      color: #fff;
+      transition: all 0.3s ease;
+    }
+
+    .message-input::placeholder {
+      color: #666;
     }
 
     .message-input:focus {
       outline: none;
-      border-color: #007bff;
-      box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+      border-color: #00ff64;
+      box-shadow: 0 0 0 3px rgba(0, 255, 100, 0.2);
+      background: #222;
     }
 
     .send-btn {
-      padding: 0.75rem 1rem;
-      background: #007bff;
-      color: white;
+      padding: 0.75rem 1.2rem;
+      background: linear-gradient(135deg, #00ff64 0%, #00cc50 100%);
+      color: #000;
       border: none;
-      border-radius: 8px;
+      border-radius: 12px;
       cursor: pointer;
-      transition: background-color 0.2s;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 255, 100, 0.2);
     }
 
     .send-btn:hover:not(:disabled) {
-      background: #0056b3;
+      background: linear-gradient(135deg, #00cc50 0%, #00aa42 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 255, 100, 0.3);
+    }
+
+    .send-btn:disabled {
+      background: #333;
+      color: #666;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
     }
 
     .message {
@@ -207,14 +240,22 @@ import { Message } from './models/message.model';
 
     .message-content {
       padding: 0.75rem 1rem;
-      border-radius: 12px;
-      background: #f1f3f4;
+      border-radius: 16px;
       word-wrap: break-word;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .user-message .message-content {
-      background: #007bff;
-      color: white;
+      background: linear-gradient(135deg, #00ff64 0%, #00cc50 100%);
+      color: #000;
+      box-shadow: 0 4px 15px rgba(0, 255, 100, 0.2);
+    }
+
+    .model-message .message-content {
+      background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     }
 
     .message-role {
@@ -222,6 +263,16 @@ import { Message } from './models/message.model';
       font-weight: 600;
       margin-bottom: 0.25rem;
       opacity: 0.8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .user-message .message-role {
+      color: #000;
+    }
+
+    .model-message .message-role {
+      color: #00ff64;
     }
 
     .message-text {
@@ -232,23 +283,32 @@ import { Message } from './models/message.model';
     .typing {
       display: flex;
       align-items: center;
-      gap: 2px;
+      gap: 4px;
     }
 
     .typing span {
       height: 8px;
       width: 8px;
       border-radius: 50%;
-      background-color: #666;
+      background: linear-gradient(135deg, #00ff64 0%, #00cc50 100%);
       animation: typing 1.4s infinite ease-in-out;
+      box-shadow: 0 0 10px rgba(0, 255, 100, 0.5);
     }
 
     .typing span:nth-child(1) { animation-delay: -0.32s; }
     .typing span:nth-child(2) { animation-delay: -0.16s; }
 
     @keyframes typing {
-      0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
-      40% { transform: scale(1); opacity: 1; }
+      0%, 80%, 100% { 
+        transform: scale(0.8); 
+        opacity: 0.5; 
+        box-shadow: 0 0 5px rgba(0, 255, 100, 0.3);
+      }
+      40% { 
+        transform: scale(1.2); 
+        opacity: 1; 
+        box-shadow: 0 0 15px rgba(0, 255, 100, 0.8);
+      }
     }
 
     /* Responsive design */

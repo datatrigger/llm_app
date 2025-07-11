@@ -1,13 +1,14 @@
 import { Component, signal, ElementRef, ViewChild, AfterViewChecked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MarkdownModule } from 'ngx-markdown';
 import { ChatService } from './services/chat.service';
 import { Message } from './models/message.model';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MarkdownModule],
   template: `
     <div class="chat-container">
       <header class="chat-header">
@@ -30,7 +31,13 @@ import { Message } from './models/message.model';
               <div class="message-role">
                 {{ message.role === 'user' ? 'You' : 'Model' }}
               </div>
-              <div class="message-text">{{ message.text }}</div>
+              <div class="message-text">
+                @if (message.role === 'user') {
+                  {{ message.text }}
+                } @else {
+                  <markdown [data]="message.text"></markdown>
+                }
+              </div>
             </div>
           </div>
         }
@@ -277,7 +284,136 @@ import { Message } from './models/message.model';
 
     .message-text {
       line-height: 1.4;
+    }
+
+    .user-message .message-text {
       white-space: pre-wrap;
+    }
+
+    .model-message .message-text {
+      white-space: normal;
+    }
+
+    /* Markdown styling for model messages */
+    .model-message .message-text ::ng-deep {
+      h1, h2, h3, h4, h5, h6 {
+        color: #00ff64;
+        margin: 0.5rem 0 0.25rem 0;
+        font-weight: 600;
+      }
+
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.3em; }
+      h3 { font-size: 1.1em; }
+
+      p {
+        margin: 0.25rem 0;
+        line-height: 1.6;
+      }
+
+      ul, ol {
+        margin: 0.25rem 0;
+        padding-left: 1.2rem;
+      }
+
+      li {
+        margin: 0.1rem 0;
+        line-height: 1.5;
+      }
+
+      li p {
+        margin: 0;
+      }
+
+      code {
+        background: rgba(0, 255, 100, 0.1);
+        color: #00ff64;
+        padding: 0.2rem 0.4rem;
+        border-radius: 4px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+      }
+
+      pre {
+        background: rgba(0, 0, 0, 0.5);
+        border: 1px solid #333;
+        border-radius: 8px;
+        padding: 1rem;
+        overflow-x: auto;
+        margin: 0.5rem 0;
+      }
+
+      pre code {
+        background: none;
+        color: #fff;
+        padding: 0;
+      }
+
+      blockquote {
+        border-left: 4px solid #00ff64;
+        padding-left: 1rem;
+        margin: 0.5rem 0;
+        font-style: italic;
+        opacity: 0.9;
+      }
+
+      blockquote p {
+        margin: 0.25rem 0;
+      }
+
+      a {
+        color: #00ff64;
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      a:hover {
+        color: #00cc50;
+        text-decoration: underline;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0.5rem 0;
+      }
+
+      th, td {
+        border: 1px solid #333;
+        padding: 0.5rem;
+        text-align: left;
+      }
+
+      th {
+        background: rgba(0, 255, 100, 0.1);
+        color: #00ff64;
+        font-weight: 600;
+      }
+
+      strong {
+        color: #00ff64;
+        font-weight: 600;
+      }
+
+      em {
+        color: #ccc;
+      }
+
+      hr {
+        border: none;
+        height: 1px;
+        background: linear-gradient(to right, transparent, #333, transparent);
+        margin: 1rem 0;
+      }
+
+      /* Reduce spacing for consecutive elements */
+      * + * {
+        margin-top: 0.25rem;
+      }
+
+      h1 + *, h2 + *, h3 + *, h4 + *, h5 + *, h6 + * {
+        margin-top: 0.25rem;
+      }
     }
 
     .typing {

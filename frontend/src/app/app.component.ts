@@ -11,7 +11,7 @@ import { Message } from './models/message.model';
   template: `
     <div class="chat-container">
       <header class="chat-header">
-        <h1>ChatGPT Clone</h1>
+        <h1>Talian</h1>
         <button 
           class="new-conversation-btn" 
           (click)="startNewConversation()"
@@ -28,7 +28,7 @@ import { Message } from './models/message.model';
             [class.model-message]="message.role === 'model'">
             <div class="message-content">
               <div class="message-role">
-                {{ message.role === 'user' ? 'You' : 'Assistant' }}
+                {{ message.role === 'user' ? 'You' : 'Model' }}
               </div>
               <div class="message-text">{{ message.text }}</div>
             </div>
@@ -38,7 +38,7 @@ import { Message } from './models/message.model';
         @if (isLoading()) {
           <div class="message model-message">
             <div class="message-content">
-              <div class="message-role">Assistant</div>
+              <div class="message-role">Model</div>
               <div class="message-text typing">
                 <span></span>
                 <span></span>
@@ -50,7 +50,7 @@ import { Message } from './models/message.model';
 
         @if (messages().length === 0 && !isLoading()) {
           <div class="empty-state">
-            <h2>Welcome to ChatGPT Clone</h2>
+            <h2>Welcome to Talian</h2>
             <p>Start a conversation by typing a message below.</p>
           </div>
         }
@@ -325,13 +325,13 @@ export class AppComponent implements AfterViewChecked {
     this.chatService.sendMessage(messageText, this.userId, this.conversationId())
       .subscribe({
         next: (response) => {
-          // Add assistant response to the conversation
-          const assistantMessage: Message = {
+          // Add model response to the conversation
+          const modelMessage: Message = {
             text: response.text,
             role: 'model'
           };
           
-          this.messages.update(messages => [...messages, assistantMessage]);
+          this.messages.update(messages => [...messages, modelMessage]);
           this.conversationId.set(response.conversationId);
           this.isLoading.set(false);
           this.shouldScrollToBottom = true;

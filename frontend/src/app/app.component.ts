@@ -481,7 +481,8 @@ export class AppComponent implements AfterViewChecked {
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
   private shouldScrollToBottom = false;
   
-  private readonly userId = 'test_user';
+  // TODO
+  private readonly userId = 'default';
 
   constructor(private chatService: ChatService) {}
 

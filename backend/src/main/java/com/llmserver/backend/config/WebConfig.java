@@ -15,7 +15,7 @@ public class WebConfig implements WebMvcConfigurer {
                     "https://taliandorogd.netlify.app",
                     "https://assistant.vlg.engineer"
                 )
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedMethods("GET", "POST")
                 .allowedHeaders("Content-Type", "Authorization")
                 .allowCredentials(true);
     }

@@ -1,7 +1,7 @@
 # Deploy gemma 3 4b
 # --region europe-west1 because no GPU available in europe-west6 in 2025
 
-# Test (unsecured)
+# Test (api key)
 gcloud run deploy llm-server-test \
    --image us-docker.pkg.dev/cloudrun/container/gemma/gemma3-4b \
    --cpu 8 \
@@ -26,14 +26,3 @@ curl "$LLM_URL/v1beta/models/gemma-3-4b-it:generateContent?key=$API_KEY" \
        "parts":[{"text": "Hi, can you tell me a fun fact about Switzerland?"}]
        }]
       }'
-
-# Example request
-curl "$LLM_URL/v1beta/models/gemma-3-4b-it:generateContent" \
-  -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
-  -H 'Content-Type: application/json' \
-  -X POST \
-  -d '{
-    "contents": [{
-      "parts":[{"text": "Hi, can you tell me a fun fact about Switzerland?"}]
-      }]
-     }'

@@ -1,0 +1,1 @@
+bru run --env dev --output results.json --verbose

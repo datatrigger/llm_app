@@ -1,0 +1,31 @@
+meta {
+  name: prompt_llm
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{llm_url}}/v1beta/models/gemma-3-4b-it:generateContent
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "contents": [
+      {
+        "parts": [
+          {"text": "Yes or no: Is Python case-sensitive?"}
+        ]
+      }
+    ],
+    "generationConfig": {
+      "maxOutputTokens": 100,
+      "temperature": 0.7
+    }
+  }
+}

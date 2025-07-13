@@ -16,6 +16,6 @@
       "protocol": "http"
     }
   },
-  "postCreateCommand": "npm install -g @angular/cli && cd frontend && npm install ngx-markdown marked",
+  "postCreateCommand": "npm install -g @angular/cli && cd frontend && npm install ngx-markdown marked && npm install -g @usebruno/cli",
   "remoteUser": "node"
 }

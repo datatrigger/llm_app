@@ -5,7 +5,7 @@ meta {
 }
 
 post {
-  url: https://expert-computing-machine-xxwv44qwgjpfvwpv-8080.app.github.dev/api/llm/prompt
+  url: {{backend_url}}/api/llm/prompt
   body: json
   auth: inherit
 }
@@ -16,7 +16,7 @@ headers {
 
 body:json {
   {
-    "prompt": "Now tell me something about France and Switzerland.",
+    "prompt": "What did I just asked about?",
     "userId": "test_user",
     "conversationId": "{{conversationId}}"
   }

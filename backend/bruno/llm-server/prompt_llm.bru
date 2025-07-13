@@ -30,6 +30,12 @@ body:json {
   }
 }
 
+script:pre-request {
+  if (bru.getEnvName() === 'prod') {
+    req.setHeader('Authorization', `Bearer ${bru.getEnvVar('gcloud_token')}`);
+  }
+}
+
 tests {
   test("Should successfully call LLM", function() {
     expect(res.status).to.equal(200);

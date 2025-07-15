@@ -52,12 +52,6 @@ public class LlmService {
         }
     }
 
-    // @param prompt The user's prompt text.
-    // @return The LLM's response text.
-    public String promptLlm(String prompt) {
-        return promptLlmWithHistory(prompt, Collections.emptyList());
-    }
-
     // @param prompt The user's current prompt.
     // @param conversationHistory The list of previous messages in the conversation.
     // @return The LLM's response text.

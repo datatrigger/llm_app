@@ -20,7 +20,7 @@ public class LlmService {
     private final RestClient restClient;
     private final String llmBaseUrl;
  
-    // @param webClientBuilder The WebClient builder provided by Spring Boot.
+    // @param restClientBuilder The RestClient   builder provided by Spring Boot.
     // @param apiUrl The URL of the LLM API, injected from application.properties.
     public LlmService(
         RestClient.Builder restClientBuilder,

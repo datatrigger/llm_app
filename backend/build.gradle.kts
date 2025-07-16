@@ -23,15 +23,19 @@ dependencyManagement {
     }
 }
 
-
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	implementation("com.google.cloud:spring-cloud-gcp-starter-data-firestore")
 	implementation("com.google.auth:google-auth-library-oauth2-http")
+
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+
+	testLogging {
+		events("passed", "skipped", "failed")
+		exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+	}
 }

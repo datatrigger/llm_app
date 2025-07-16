@@ -29,9 +29,6 @@ dependencies {
 	implementation("com.google.auth:google-auth-library-oauth2-http")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testImplementation("org.mockito:mockito-core")
-	testImplementation("org.mockito:mockito-junit-jupiter")
-	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 tasks.withType<Test> {

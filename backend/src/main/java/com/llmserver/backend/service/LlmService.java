@@ -23,6 +23,9 @@ public class LlmService {
     private final RestClient restClient;
     private final String llmBaseUrl;
  
+    // @param restClientBuilder The RestClient builder provided by Spring Boot.
+    // @param apiUrl The URL of the LLM API, injected from application.properties.
+    // @param apiPath The path of the LLM API, injected from application.properties.
     public LlmService(
         RestClient.Builder restClientBuilder,
         @Value("${llm.base.url}") String baseUrl,
@@ -53,6 +56,9 @@ public class LlmService {
         }
     }
 
+    // @param prompt The user's current prompt.
+    // @param conversationHistory The list of previous messages in the conversation.
+    // @return The LLM's response text.
     public String promptLlmWithHistory(String prompt, List<Message> conversationHistory) {
         logger.info("Calling LLM", 
             "promptLength", prompt.length(),
@@ -107,6 +113,8 @@ public class LlmService {
         }
     }
 
+    // @param response The LlmResponse object from the API.
+    // @return The generated text, or an empty string if not found.
     private String extractTextFromResponse(LlmResponse response) {
         if (response != null && response.candidates() != null && !response.candidates().isEmpty()) {
             Candidate firstCandidate = response.candidates().get(0);

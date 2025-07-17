@@ -1,7 +1,6 @@
 package com.llmserver.backend.service;
 
 import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.Query;
 import com.google.cloud.firestore.DocumentReference;
@@ -25,6 +24,12 @@ public class ConversationService {
         logger.info("ConversationService initialized");
     }
     
+    /*
+    Creates a new conversation and adds the first message to it.
+    @param userId The user ID
+    @param message The first message in the conversation
+    @return The conversation ID
+    */
     public String createConversation(String userId, Message message) {
         logger.info("Creating new conversation", "userId", userId);
         
@@ -50,6 +55,12 @@ public class ConversationService {
         }
     }
     
+    /*
+    Adds a message to an existing conversation.
+    @param userId The user ID
+    @param conversationId The conversation ID
+    @param message The message to add
+    */
     public void addMessageToConversation(String userId, String conversationId, Message message) {
         logger.debug("Adding message to conversation", 
             "conversationId", conversationId,
@@ -76,6 +87,12 @@ public class ConversationService {
         }
     }
     
+    /*
+    Retrieves all messages from a conversation, ordered by timestamp.
+    @param userId The user ID
+    @param conversationId The conversation ID
+    @return List of messages in chronological order
+    */
     public List<Message> getConversationHistory(String userId, String conversationId) {
         logger.debug("Retrieving conversation history", 
             "conversationId", conversationId,
@@ -89,8 +106,8 @@ public class ConversationService {
                 .document(conversationId)
                 .collection("messages")
                 .orderBy("timestamp", Query.Direction.ASCENDING)
-                .get()
-                .get()
+                .get() // Firestore execution
+                .get() // Future resolution
                 .getDocuments();
             
             List<Message> messages = new ArrayList<>();
@@ -112,12 +129,21 @@ public class ConversationService {
         }
     }
     
+    /*
+    Checks if a conversation exists.
+    @param userId The user ID
+    @param conversationId The conversation ID
+    @return true if the conversation exists, false otherwise
+    */
     public boolean conversationExists(String userId, String conversationId) {
         logger.debug("Checking if conversation exists", 
             "conversationId", conversationId,
             "userId", userId);
         
         try {
+            // .exists() returns False even on existing subcollections
+            // because they are not actual documents. Hence the need to check
+            // for any messages in the subcollection with the given `conversa
             List<QueryDocumentSnapshot> messages = firestore
                 .collection("users")
                 .document(userId)

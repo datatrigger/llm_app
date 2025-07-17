@@ -31,6 +31,9 @@ public class LlmController {
         this.conversationService = conversationService;
     }
 
+    // @param request The request from the frontend containing:
+    // the user's prompt, user ID, and optional conversation ID.
+    // @return The response for the frontend with the LLM response and conversation ID.
     @PostMapping("/prompt")
     public ResponseEntity<PromptResponse> getLlmResponse(@RequestBody PromptRequest request) {
         // Generate request ID for tracing

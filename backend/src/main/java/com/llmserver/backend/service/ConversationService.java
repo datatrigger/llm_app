@@ -143,7 +143,7 @@ public class ConversationService {
         try {
             // .exists() returns False even on existing subcollections
             // because they are not actual documents. Hence the need to check
-            // for any messages in the subcollection with the given `conversa
+            // for any messages in the subcollection with the given `conversationId`
             List<QueryDocumentSnapshot> messages = firestore
                 .collection("users")
                 .document(userId)

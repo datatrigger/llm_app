@@ -27,6 +27,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.google.cloud:spring-cloud-gcp-starter-data-firestore")
 	implementation("com.google.auth:google-auth-library-oauth2-http")
+	implementation("net.logstash.logback:logstash-logback-encoder:8.1")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.wiremock.integrations:wiremock-spring-boot:3.10.0")

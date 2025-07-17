@@ -32,7 +32,11 @@
         "vscjava.vscode-java-pack",
         "pivotal.vscode-spring-boot",
         "ms-azuretools.vscode-docker"
-      ]
+      ],
+      "settings": {
+        "java.server.launchMode": "Standard",
+        "java.configuration.checkProjectSettingsExclusions": false
+      }
     }
   }
 }

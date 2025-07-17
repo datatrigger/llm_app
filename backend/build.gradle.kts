@@ -29,6 +29,7 @@ dependencies {
 	implementation("com.google.auth:google-auth-library-oauth2-http")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.wiremock.integrations:wiremock-spring-boot:3.10.0")
 }
 
 tasks.withType<Test> {

@@ -9,7 +9,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/api/**")
+        registry.addMapping("/api/llm/prompt")
                 .allowedOrigins(
                     "https://upgraded-goggles-467wrr974762qwv7-4200.app.github.dev",
                     "https://taliandorogd.netlify.app",

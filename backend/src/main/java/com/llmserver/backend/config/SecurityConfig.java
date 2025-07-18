@@ -18,42 +18,29 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-            // Disable Cross-Site Request Forgery (REST API)
-            .csrf(AbstractHttpConfigurer::disable)
+            .csrf(AbstractHttpConfigurer::disable) // Useless for stateless REST APIs
+            .formLogin(AbstractHttpConfigurer::disable) // No login for now
+            // TODO .httpBasic(AbstractHttpConfigurer::disable)
             
-            // Disable form login and HTTP Basic (REST API)
-            .formLogin(AbstractHttpConfigurer::disable)
-            .httpBasic(AbstractHttpConfigurer::disable)
-            
-            // Stateless session management
+            // Stateless sessions (REST API deployed in ephemeral containers)
             .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             
-            // Configure authorization
+            // Explicit and future-proof authorizations
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/api/health").permitAll()
-                .requestMatchers("/api/llm/**").permitAll()
-                .anyRequest().denyAll()
+            .requestMatchers("/api/health").permitAll()
+            .requestMatchers("/api/llm/prompt").permitAll()
+            .anyRequest()
+            .denyAll()
             )
             
-            // Security headers - modern syntax
-            .headers(headers -> headers
-                .frameOptions(frameOptions -> frameOptions.deny())
-                .contentTypeOptions(Customizer.withDefaults()) // Use default configuration
-                .httpStrictTransportSecurity(hstsConfig -> hstsConfig
-                    .maxAgeInSeconds(31536000)
-                    .includeSubDomains(true)
-                    .preload(true))
-                .referrerPolicy(referrerPolicy -> referrerPolicy
-                    .policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
-                .crossOriginEmbedderPolicy(coep -> coep
-                    .policy(org.springframework.security.web.header.writers.CrossOriginEmbedderPolicyHeaderWriter.CrossOriginEmbedderPolicy.REQUIRE_CORP))
-                .crossOriginOpenerPolicy(coop -> coop
-                    .policy(org.springframework.security.web.header.writers.CrossOriginOpenerPolicyHeaderWriter.CrossOriginOpenerPolicy.SAME_ORIGIN))
-                .crossOriginResourcePolicy(corp -> corp
-                    .policy(org.springframework.security.web.header.writers.CrossOriginResourcePolicyHeaderWriter.CrossOriginResourcePolicy.SAME_ORIGIN))
-                .permissionsPolicyHeader(permissions -> permissions
-                    .policy("camera=(), fullscreen=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), sync-xhr=()"))
+            // Security headers
+            .headers(headers -> headers)
+            .contentTypeOptions(Customizer.withDefaults())
+            .httpStrictTransportSecurity(hstsConfig -> hstsConfig
+                .maxAgeInSeconds(31536000)
+                .includeSubDomains(true)
+                .preload(true)
             )
             .build();
     }

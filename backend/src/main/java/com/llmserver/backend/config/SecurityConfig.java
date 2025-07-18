@@ -1,6 +1,5 @@
 package com.llmserver.backend.config;
 
-import com.llmserver.backend.filter.ApiKeyAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,20 +16,11 @@ public class SecurityConfig {
 
     private static final int HSTS_MAX_AGE_ONE_YEAR = 365 * 24 * 60 * 60;
 
-    private final ApiKeyAuthenticationFilter apiKeyAuthenticationFilter;
-
-    public SecurityConfig(ApiKeyAuthenticationFilter apiKeyAuthenticationFilter) {
-        this.apiKeyAuthenticationFilter = apiKeyAuthenticationFilter;
-    }
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
             .csrf(AbstractHttpConfigurer::disable) // Useless for stateless REST APIs
             .formLogin(AbstractHttpConfigurer::disable) // No login for now
-            
-            // Add API key filter before Spring Security filters
-            .addFilterBefore(apiKeyAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
             
             // Stateless sessions (REST API deployed in ephemeral containers)
             .sessionManagement(session -> session

@@ -31,7 +31,7 @@ steps:
       - '--allow-unauthenticated'
       - '--port=8080'
       - '--set-env-vars=LLM_MODEL_ID=${_LLM_MODEL_ID}'
-      - '--set-secrets=API_KEY=API_KEY:latest,LLM_URL=LLM_URL:latest'
+      - '--set-secrets=LLM_URL=LLM_URL:latest'
       - '--memory=1Gi'
       - '--cpu=1'
       - '--min-instances=0'

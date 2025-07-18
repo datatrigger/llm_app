@@ -1,0 +1,74 @@
+<div class="chat-container">
+  <header class="chat-header">
+    <h1>Talian</h1>
+    <button 
+      class="new-conversation-btn" 
+      (click)="startNewConversation()"
+      [disabled]="isLoading()">
+      New Conversation
+    </button>
+  </header>
+
+  <div class="messages-container" #messagesContainer>
+    @for (message of messages(); track $index) {
+      <div 
+        class="message"
+        [class.user-message]="message.role === 'user'"
+        [class.model-message]="message.role === 'model'">
+        <div class="message-content">
+          <div class="message-role">
+            {{ message.role === 'user' ? 'You' : 'Model' }}
+          </div>
+          <div class="message-text">
+            @if (message.role === 'user') {
+              {{ message.text }}
+            } @else {
+              <markdown [data]="message.text"></markdown>
+            }
+          </div>
+        </div>
+      </div>
+    }
+    
+    @if (isLoading()) {
+      <div class="message model-message">
+        <div class="message-content">
+          <div class="message-role">Model</div>
+          <div class="message-text typing">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+    }
+
+    @if (messages().length === 0 && !isLoading()) {
+      <div class="empty-state">
+        <h2>Welcome to Talian</h2>
+        <p>Start a conversation by typing a message below.</p>
+      </div>
+    }
+  </div>
+
+  <div class="input-container">
+    <form (ngSubmit)="sendMessage()" class="message-form">
+      <div class="input-wrapper">
+        <textarea
+          [(ngModel)]="currentMessage"
+          name="message"
+          placeholder="Type your message here..."
+          class="message-input"
+          [disabled]="isLoading()"
+          (keydown.enter)="onEnterKey($event)"
+          rows="1"></textarea>
+        <button 
+          type="submit" 
+          class="send-btn"
+          [disabled]="!currentMessage().trim() || isLoading()">
+          Send
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

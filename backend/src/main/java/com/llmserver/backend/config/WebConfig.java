@@ -16,7 +16,7 @@ public class WebConfig implements WebMvcConfigurer {
                     "https://assistant.vlg.engineer"
                 )
                 .allowedMethods("GET", "POST")
-                .allowedHeaders("Content-Type", "Authorization")
+                .allowedHeaders("Content-Type", "Authorization", "X-API-Key")
                 .allowCredentials(true);
     }
 }

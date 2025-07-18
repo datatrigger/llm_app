@@ -31,7 +31,7 @@ steps:
       - '--image=europe-west6-docker.pkg.dev/$PROJECT_ID/docker-repo/llm-server:latest'
       - '--cpu=8'
       - '--concurrency=4'
-      - '--set-env-vars=OLLAMA_NUM_PARALLEL=4'
+      - '--set-env-vars=OLLAMA_NUM_PARALLEL=4,OLLAMA_NUM_CTX=32768'
       - '--no-allow-unauthenticated'
       - '--gpu=1'
       - '--gpu-type=nvidia-l4'

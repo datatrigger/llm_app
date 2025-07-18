@@ -19,8 +19,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-            .csrf(AbstractHttpConfigurer::disable) // Useless for stateless REST APIs
-            .formLogin(AbstractHttpConfigurer::disable) // No login for now
+
+            // Disable useless features for a stateless public rest api
+            .csrf(AbstractHttpConfigurer::disable)
+            .formLogin(AbstractHttpConfigurer::disable)
+            .httpBasic(AbstractHttpConfigurer::disable)
             
             // Stateless sessions (REST API deployed in ephemeral containers)
             .sessionManagement(session -> session
@@ -30,7 +33,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(
                 authz -> authz
                 .requestMatchers("/api/health").permitAll()
-                .requestMatchers("/api/llm/prompt").permitAll() // Protected by the api key filter
+                .requestMatchers("/api/llm/prompt").permitAll()
                 .anyRequest()
                 .denyAll()
             )

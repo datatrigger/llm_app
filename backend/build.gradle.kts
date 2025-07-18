@@ -25,6 +25,8 @@ dependencyManagement {
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-starter-validation")
+	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("com.google.cloud:spring-cloud-gcp-starter-data-firestore")
 	implementation("com.google.auth:google-auth-library-oauth2-http")
 	implementation("net.logstash.logback:logstash-logback-encoder:8.1")

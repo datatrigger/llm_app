@@ -2,6 +2,7 @@ package com.llmserver.backend.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
+import jakarta.validation.constraints.NotBlank;
 
 // Rough sructure of the request's json:
 /*
@@ -13,7 +14,15 @@ import java.util.List;
 public class LlmDto {
     
     // Frontend
-    public record PromptRequest(String prompt, String userId, String conversationId) {}
+    public record PromptRequest(
+        @NotBlank(message = "Prompt cannot be empty")
+        String prompt,
+
+        @NotBlank(message = "User ID cannot be empty")
+        String userId,
+        
+        String conversationId
+    ) {}
     public record PromptResponse(String text, String conversationId) {}
 
     // LLM Service

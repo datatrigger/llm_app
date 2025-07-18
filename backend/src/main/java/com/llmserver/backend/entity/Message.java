@@ -2,6 +2,10 @@ package com.llmserver.backend.entity;
 
 import com.google.cloud.firestore.annotation.DocumentId;
 import com.google.cloud.firestore.annotation.ServerTimestamp;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+
 import com.google.cloud.Timestamp;
 
 public class Message {
@@ -9,8 +13,12 @@ public class Message {
     @DocumentId
     private String id;
     
+    @NotBlank(message = "Message text cannot be empty")
     private String text;
-    private String role; // "user" or "model"
+
+    @NotBlank(message = "Role cannot be empty")
+    @Pattern(regexp = "^(user|model)$", message = "Role must be either 'user' or 'model'")
+    private String role;
     
     @ServerTimestamp
     private Timestamp timestamp;

@@ -40,5 +40,6 @@ steps:
       - '--timeout=180'
       - '--region=europe-west1'
       - '--no-cpu-throttling'
+      - '--clear-secrets'
     
 logsBucket: 'gs://llm-server-cloud-build-logs'

@@ -1,4 +1,4 @@
-import { Component, signal, ElementRef, ViewChild } from '@angular/core';
+import { Component, signal, ElementRef, ViewChild, AfterViewChecked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MarkdownModule } from 'ngx-markdown';
@@ -12,7 +12,7 @@ import { Message } from './models/message.model';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements AfterViewChecked {
   // Using signals for zoneless Angular
   messages = signal<Message[]>([]);
   currentMessage = signal('');
@@ -20,11 +20,27 @@ export class AppComponent {
   isLoading = signal(false);
   
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
+  private shouldScrollToBottom = false;
   
   // TODO
   private readonly userId = 'default';
 
   constructor(private chatService: ChatService) {}
+
+  ngAfterViewChecked() {
+    if (this.shouldScrollToBottom) {
+      this.scrollToBottom();
+      this.shouldScrollToBottom = false;
+    }
+  }
+
+  private scrollToBottom(): void {
+    try {
+      this.messagesContainer.nativeElement.scrollTop = this.messagesContainer.nativeElement.scrollHeight;
+    } catch(err) {
+      console.error('Error scrolling to bottom:', err);
+    }
+  }
 
   sendMessage() {
     const messageText = this.currentMessage().trim();
@@ -41,6 +57,9 @@ export class AppComponent {
     this.messages.update(messages => [...messages, userMessage]);
     this.currentMessage.set('');
     this.isLoading.set(true);
+    
+    // Only scroll to bottom when user sends a message
+    this.shouldScrollToBottom = true;
 
     // Call the backend API
     this.chatService.sendMessage(messageText, this.userId, this.conversationId())
@@ -55,6 +74,9 @@ export class AppComponent {
           this.messages.update(messages => [...messages, modelMessage]);
           this.conversationId.set(response.conversationId);
           this.isLoading.set(false);
+          
+          // Remove this line - don't scroll when model responds
+          // this.shouldScrollToBottom = true;
         },
         error: (error) => {
           console.error('Error sending message:', error);
@@ -67,6 +89,9 @@ export class AppComponent {
           
           this.messages.update(messages => [...messages, errorMessage]);
           this.isLoading.set(false);
+          
+          // Remove this line - don't scroll on error either
+          // this.shouldScrollToBottom = true;
         }
       });
   }

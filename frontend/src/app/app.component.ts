@@ -74,9 +74,6 @@ export class AppComponent implements AfterViewChecked {
           this.messages.update(messages => [...messages, modelMessage]);
           this.conversationId.set(response.conversationId);
           this.isLoading.set(false);
-          
-          // Remove this line - don't scroll when model responds
-          // this.shouldScrollToBottom = true;
         },
         error: (error) => {
           console.error('Error sending message:', error);
@@ -89,9 +86,6 @@ export class AppComponent implements AfterViewChecked {
           
           this.messages.update(messages => [...messages, errorMessage]);
           this.isLoading.set(false);
-          
-          // Remove this line - don't scroll on error either
-          // this.shouldScrollToBottom = true;
         }
       });
   }

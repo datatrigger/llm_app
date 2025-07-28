@@ -57,6 +57,8 @@ export class AppComponent implements AfterViewChecked {
     this.messages.update(messages => [...messages, userMessage]);
     this.currentMessage.set('');
     this.isLoading.set(true);
+    
+    // Only scroll to bottom when user sends a message
     this.shouldScrollToBottom = true;
 
     // Call the backend API
@@ -72,7 +74,6 @@ export class AppComponent implements AfterViewChecked {
           this.messages.update(messages => [...messages, modelMessage]);
           this.conversationId.set(response.conversationId);
           this.isLoading.set(false);
-          this.shouldScrollToBottom = true;
         },
         error: (error) => {
           console.error('Error sending message:', error);
@@ -85,7 +86,6 @@ export class AppComponent implements AfterViewChecked {
           
           this.messages.update(messages => [...messages, errorMessage]);
           this.isLoading.set(false);
-          this.shouldScrollToBottom = true;
         }
       });
   }

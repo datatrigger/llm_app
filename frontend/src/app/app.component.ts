@@ -1,4 +1,4 @@
-import { Component, signal, ElementRef, ViewChild, AfterViewChecked } from '@angular/core';
+import { Component, signal, ElementRef, ViewChild, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MarkdownModule } from 'ngx-markdown';
@@ -12,7 +12,8 @@ import { Message } from './models/message.model';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements AfterViewChecked {
+
+export class AppComponent {
   // Using signals for zoneless Angular
   messages = signal<Message[]>([]);
   currentMessage = signal('');
@@ -20,23 +21,30 @@ export class AppComponent implements AfterViewChecked {
   isLoading = signal(false);
   
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
-  private shouldScrollToBottom = false;
   
   // TODO
   private readonly userId = 'default';
 
-  constructor(private chatService: ChatService) {}
-
-  ngAfterViewChecked() {
-    if (this.shouldScrollToBottom) {
-      this.scrollToBottom();
-      this.shouldScrollToBottom = false;
-    }
+  constructor(private chatService: ChatService) {
+    effect(() => {
+      const messages = this.messages();
+      if (messages.length > 0) {
+        const lastMessage = messages[messages.length - 1];
+        
+        // Only scroll when the last message is from the user
+        if (lastMessage.role === 'user') {
+          setTimeout(() => this.scrollToBottom(), 0);
+        }
+      }
+    });
   }
 
   private scrollToBottom(): void {
     try {
-      this.messagesContainer.nativeElement.scrollTop = this.messagesContainer.nativeElement.scrollHeight;
+      const container = this.messagesContainer?.nativeElement;
+      if (container) {
+        container.scrollTop = container.scrollHeight;
+      }
     } catch(err) {
       console.error('Error scrolling to bottom:', err);
     }
@@ -57,11 +65,8 @@ export class AppComponent implements AfterViewChecked {
     this.messages.update(messages => [...messages, userMessage]);
     this.currentMessage.set('');
     this.isLoading.set(true);
-    
-    // Only scroll to bottom when user sends a message
-    this.shouldScrollToBottom = true;
 
-    // Call the backend API
+    // Call the LLM and update the current conversation
     this.chatService.sendMessage(messageText, this.userId, this.conversationId())
       .subscribe({
         next: (response) => {
@@ -77,8 +82,6 @@ export class AppComponent implements AfterViewChecked {
         },
         error: (error) => {
           console.error('Error sending message:', error);
-          
-          // Add error message to the conversation
           const errorMessage: Message = {
             text: 'Sorry, there was an error processing your message. Please try again.',
             role: 'model'

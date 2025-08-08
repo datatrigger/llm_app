@@ -30,7 +30,6 @@ export class AppComponent {
       const messages = this.messages();
       if (messages.length > 0) {
         const lastMessage = messages[messages.length - 1];
-        
         // Only scroll when the last message is from the user
         if (lastMessage.role === 'user') {
           setTimeout(() => this.scrollToBottom(), 0);

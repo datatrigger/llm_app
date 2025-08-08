@@ -3,11 +3,11 @@
 set -e
 echo "Starting Ollama server in background..."
 /bin/ollama serve &
-OLLAMA_PID=$! # Get PID of the background process
+OLLAMA_PID=$!
 
 
-MAX_RETRIES=50 # Wait for a maximum of 30 attempts
-RETRY_INTERVAL=2 # Wait 2 seconds between attempts
+MAX_RETRIES=50 # Max attempts
+RETRY_INTERVAL=2 # Seconds to wait between attempts
 retries=0
 
 echo "Waiting for Ollama to be ready..."
@@ -28,7 +28,7 @@ fi
 
 echo "Starting app server in foreground..."
 /app/server &
-APP_PID=$! # Get PID of the background process
+APP_PID=$!
 
 # Wait for either process to exit
 wait -n $OLLAMA_PID $APP_PID

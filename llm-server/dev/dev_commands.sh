@@ -5,7 +5,6 @@ gcloud auth application-default login
 # test docker container
 docker build --pull --build-arg MODEL=$MODEL . -t gemma3
 docker run -d -p 8080:8080 --name gemma-proxy -e MODEL=$MODEL gemma3
-
 curl -X POST https://fuzzy-system-rwgpxxv44pj25xrj-8080.app.github.dev/v1beta/models/gemma-3-4b-it:generateContent \
   -H "Content-Type: application/json" \
   -d '{
@@ -21,6 +20,8 @@ curl -X POST https://fuzzy-system-rwgpxxv44pj25xrj-8080.app.github.dev/v1beta/mo
       "temperature": 0.7
     }
   }'
+# Clean up
+docker system prune -a --volumes -f
 
 # Go run tests
 go mod tidy

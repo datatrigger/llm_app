@@ -5,21 +5,23 @@ import com.llmserver.backend.dto.LlmDto.PromptRequest;
 import com.llmserver.backend.entity.Message;
 import com.llmserver.backend.service.ConversationService;
 import com.llmserver.backend.service.LlmService;
+import com.llmserver.backend.config.SecurityConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
 import java.util.Collections;
-
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+
 @WebMvcTest(LlmController.class)
+@Import(SecurityConfig.class)
 class LlmControllerTest {
 
     @Autowired

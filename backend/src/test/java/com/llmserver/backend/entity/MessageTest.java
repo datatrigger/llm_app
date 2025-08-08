@@ -2,27 +2,31 @@ package com.llmserver.backend.entity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-
 import org.junit.jupiter.api.Test;
-
 import com.google.cloud.Timestamp;
 
 class MessageTest {
 
     @Test
-    void shouldCreateMessageWithDefaultConstructor() {
+    void shouldCreateMessageWithFullConstructor() {
+        // Given
+        String id = "msg123";
+        String text = "Hello, world!";
+        String role = "user";
+        Timestamp timestamp = Timestamp.now();
+
         // When
-        Message message = new Message();
+        Message message = new Message(id, text, role, timestamp);
 
         // Then
-        assertNull(message.getId());
-        assertNull(message.getText());
-        assertNull(message.getRole());
-        assertNull(message.getTimestamp());
+        assertEquals(id, message.id());
+        assertEquals(text, message.text());
+        assertEquals(role, message.role());
+        assertEquals(timestamp, message.timestamp());
     }
 
     @Test
-    void shouldCreateMessageWithTextAndRole() {
+    void shouldCreateMessageWithConvenienceConstructor() {
         // Given
         String text = "Hello, world!";
         String role = "user";
@@ -31,62 +35,10 @@ class MessageTest {
         Message message = new Message(text, role);
 
         // Then
-        assertNull(message.getId()); // ID is set by Firestore
-        assertEquals(text, message.getText());
-        assertEquals(role, message.getRole());
-        assertNull(message.getTimestamp()); // Timestamp is set by Firestore
-    }
-
-    @Test
-    void shouldSetAndGetId() {
-        // Given
-        Message message = new Message();
-        String id = "msg123";
-
-        // When
-        message.setId(id);
-
-        // Then
-        assertEquals(id, message.getId());
-    }
-
-    @Test
-    void shouldSetAndGetText() {
-        // Given
-        Message message = new Message();
-        String text = "Test message";
-
-        // When
-        message.setText(text);
-
-        // Then
-        assertEquals(text, message.getText());
-    }
-
-    @Test
-    void shouldSetAndGetRole() {
-        // Given
-        Message message = new Message();
-        String role = "model";
-
-        // When
-        message.setRole(role);
-
-        // Then
-        assertEquals(role, message.getRole());
-    }
-
-    @Test
-    void shouldSetAndGetTimestamp() {
-        // Given
-        Message message = new Message();
-        Timestamp timestamp = Timestamp.now();
-
-        // When
-        message.setTimestamp(timestamp);
-
-        // Then
-        assertEquals(timestamp, message.getTimestamp());
+        assertNull(message.id()); // ID is set by Firestore
+        assertEquals(text, message.text());
+        assertEquals(role, message.role());
+        assertNull(message.timestamp()); // Timestamp is set by Firestore
     }
 
     @Test
@@ -99,8 +51,10 @@ class MessageTest {
         Message userMessage = new Message(userText, userRole);
 
         // Then
-        assertEquals(userText, userMessage.getText());
-        assertEquals(userRole, userMessage.getRole());
+        assertEquals(userText, userMessage.text());
+        assertEquals(userRole, userMessage.role());
+        assertNull(userMessage.id());
+        assertNull(userMessage.timestamp());
     }
 
     @Test
@@ -113,24 +67,22 @@ class MessageTest {
         Message modelMessage = new Message(modelText, modelRole);
 
         // Then
-        assertEquals(modelText, modelMessage.getText());
-        assertEquals(modelRole, modelMessage.getRole());
+        assertEquals(modelText, modelMessage.text());
+        assertEquals(modelRole, modelMessage.role());
+        assertNull(modelMessage.id());
+        assertNull(modelMessage.timestamp());
     }
 
     @Test
     void shouldHandleNullValues() {
-        // Given
-        Message message = new Message();
-
-        // When
-        message.setText(null);
-        message.setRole(null);
-        message.setTimestamp(null);
+        // Given & When
+        Message message = new Message(null, null, null, null);
 
         // Then
-        assertNull(message.getText());
-        assertNull(message.getRole());
-        assertNull(message.getTimestamp());
+        assertNull(message.id());
+        assertNull(message.text());
+        assertNull(message.role());
+        assertNull(message.timestamp());
     }
 
     @Test
@@ -143,7 +95,57 @@ class MessageTest {
         Message message = new Message(emptyText, emptyRole);
 
         // Then
-        assertEquals(emptyText, message.getText());
-        assertEquals(emptyRole, message.getRole());
+        assertEquals(emptyText, message.text());
+        assertEquals(emptyRole, message.role());
+        assertNull(message.id());
+        assertNull(message.timestamp());
+    }
+
+    @Test
+    void shouldCreateMessageWithNullIdAndTimestamp() {
+        // Given
+        String text = "Test message";
+        String role = "user";
+
+        // When
+        Message message = new Message(null, text, role, null);
+
+        // Then
+        assertNull(message.id());
+        assertEquals(text, message.text());
+        assertEquals(role, message.role());
+        assertNull(message.timestamp());
+    }
+
+    @Test
+    void shouldCreateMessageWithAllFields() {
+        // Given
+        String id = "msg456";
+        String text = "Complete message";
+        String role = "model";
+        Timestamp timestamp = Timestamp.now();
+
+        // When
+        Message message = new Message(id, text, role, timestamp);
+
+        // Then
+        assertEquals(id, message.id());
+        assertEquals(text, message.text());
+        assertEquals(role, message.role());
+        assertEquals(timestamp, message.timestamp());
+    }
+
+    @Test
+    void shouldBeImmutable() {
+        // Given
+        Message original = new Message("Original text", "user");
+        
+        // When - create a new message with different text (records are immutable)
+        Message modified = new Message(original.id(), "Modified text", original.role(), original.timestamp());
+
+        // Then
+        assertEquals("Original text", original.text());
+        assertEquals("Modified text", modified.text());
+        assertEquals(original.role(), modified.role());
     }
 }

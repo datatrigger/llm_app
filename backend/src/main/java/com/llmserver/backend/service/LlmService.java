@@ -68,8 +68,8 @@ public class LlmService {
         
         // Add conversation history
         for (Message message : conversationHistory) {
-            Part part = new Part(message.getText());
-            Content content = new Content(Collections.singletonList(part), message.getRole());
+            Part part = new Part(message.text());
+            Content content = new Content(Collections.singletonList(part), message.role());
             contents.add(content);
         }
         

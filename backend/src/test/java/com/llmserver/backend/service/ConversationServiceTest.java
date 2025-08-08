@@ -144,10 +144,10 @@ class ConversationServiceTest {
 
         // Then
         assertEquals(2, history.size());
-        assertEquals("Hello", history.get(0).getText());
-        assertEquals("user", history.get(0).getRole());
-        assertEquals("Hi there!", history.get(1).getText());
-        assertEquals("model", history.get(1).getRole());
+        assertEquals("Hello", history.get(0).text());
+        assertEquals("user", history.get(0).role());
+        assertEquals("Hi there!", history.get(1).text());
+        assertEquals("model", history.get(1).role());
     }
 
     @Test

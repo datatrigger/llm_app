@@ -65,7 +65,7 @@ public class ConversationService {
         logger.debug("Adding message to conversation", 
             "conversationId", conversationId,
             "userId", userId,
-            "role", message.getRole());
+            "role", message.role());
         
         try {
             firestore

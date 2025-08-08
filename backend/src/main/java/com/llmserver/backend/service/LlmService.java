@@ -60,9 +60,11 @@ public class LlmService {
     // @param conversationHistory The list of previous messages in the conversation.
     // @return The LLM's response text.
     public String promptLlmWithHistory(String prompt, List<Message> conversationHistory) {
-        logger.info("Calling LLM", 
+        logger.info(
+            "Calling LLM", 
             "promptLength", prompt.length(),
-            "historySize", conversationHistory.size());
+            "historySize", conversationHistory.size()
+        );
 
         List<Content> contents = new ArrayList<>();
         
@@ -101,9 +103,11 @@ public class LlmService {
             long duration = System.currentTimeMillis() - startTime;
             String responseText = extractTextFromResponse(response);
             
-            logger.info("LLM call completed successfully", 
+            logger.info(
+                "LLM call completed successfully", 
                 "duration", duration,
-                "responseLength", responseText.length());
+                "responseLength", responseText.length()
+            );
             
             return responseText;
             

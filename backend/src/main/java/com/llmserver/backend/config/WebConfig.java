@@ -17,6 +17,7 @@ public class WebConfig implements WebMvcConfigurer {
                 )
                 .allowedMethods("POST")
                 .allowedHeaders("Content-Type")
-                .allowCredentials(false);
+                .allowCredentials(false)
+        ;
     }
 }

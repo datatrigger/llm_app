@@ -19,7 +19,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
 
-            // Disable useless features for a stateless public rest api
+            // Disable useless features for a stateless public REST API
             .csrf(AbstractHttpConfigurer::disable)
             .formLogin(AbstractHttpConfigurer::disable)
             .httpBasic(AbstractHttpConfigurer::disable)
@@ -47,6 +47,8 @@ public class SecurityConfig {
                     .preload(true)
                 )
             )
-            .build();
+
+            .build()
+        ;
     }
 }

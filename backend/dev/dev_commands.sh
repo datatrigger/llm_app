@@ -4,8 +4,8 @@ gcloud auth application-default login
 
 # Call LLM private service
 gcloud projects add-iam-policy-binding $PROJECT_ID \
-    --member="user:$(gcloud config get-value account)" \
-    --role="roles/run.invoker"
+  --member="user:$(gcloud config get-value account)" \
+  --role="roles/run.invoker"
 gcloud run services get-iam-policy llm-server --region=europe-west1
 
 # gradle & docker

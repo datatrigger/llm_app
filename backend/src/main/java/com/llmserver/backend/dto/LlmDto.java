@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
 import jakarta.validation.constraints.NotBlank;
 
-// Rough sructure of the request's json:
+// Rough structure of the request's json:
 /*
 "contents": [
     {"role": "user", "parts": [{"text": "Your prompt here"}]}

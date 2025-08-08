@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -41,9 +40,11 @@ public class LlmController {
         MDC.put("requestId", requestId);
         MDC.put("userId", request.userId());
         
-        logger.info("Received prompt request", 
+        logger.info(
+            "Received prompt request", 
             "conversationId", request.conversationId(),
-            "promptLength", request.prompt() != null ? request.prompt().length() : 0);
+            "promptLength", request.prompt() != null ? request.prompt().length() : 0
+        );
 
         try {
             // Validate required fields
@@ -91,9 +92,11 @@ public class LlmController {
                 logger.info("Added messages to existing conversation");
             }
             
-            logger.info("Successfully processed prompt request", 
+            logger.info(
+                "Successfully processed prompt request", 
                 "responseLength", llmResponseText.length(),
-                "conversationId", conversationId);
+                "conversationId", conversationId
+            );
             
             return ResponseEntity.ok(new PromptResponse(llmResponseText, conversationId));
             

@@ -41,36 +41,45 @@ class LlmControllerTest {
         // Given
         PromptRequest request = new PromptRequest("Hello", "user123", null);
         when(llmService.promptLlmWithHistory(anyString(), anyList()))
-                .thenReturn("Hello! How can I help you?");
+            .thenReturn("Hello! How can I help you?");
         when(conversationService.createConversation(anyString(), any(Message.class)))
-                .thenReturn("conv123");
+            .thenReturn("conv123");
 
         // When & Then
-        mockMvc.perform(post("/api/llm/prompt")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.text").value("Hello! How can I help you?"))
-                .andExpect(jsonPath("$.conversationId").value("conv123"));
+        mockMvc
+            .perform(
+                post("/api/llm/prompt")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(request)
+                )
+            )
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.text").value("Hello! How can I help you?"))
+            .andExpect(jsonPath("$.conversationId").value("conv123"));
     }
 
     @Test
     void shouldContinueExistingConversationSuccessfully() throws Exception {
         // Given
         PromptRequest request = new PromptRequest("What's the weather?", "user123", "conv123");
-        when(conversationService.conversationExists("user123", "conv123")).thenReturn(true);
+        when(conversationService.conversationExists("user123", "conv123"))
+            .thenReturn(true);
         when(conversationService.getConversationHistory("user123", "conv123"))
-                .thenReturn(Collections.singletonList(new Message("Hello", "user")));
+            .thenReturn(Collections.singletonList(new Message("Hello", "user")));
         when(llmService.promptLlmWithHistory(anyString(), anyList()))
-                .thenReturn("I don't have access to weather data.");
+            .thenReturn("I don't have access to weather data.");
 
         // When & Then
-        mockMvc.perform(post("/api/llm/prompt")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.text").value("I don't have access to weather data."))
-                .andExpect(jsonPath("$.conversationId").value("conv123"));
+        mockMvc
+            .perform(
+                post("/api/llm/prompt")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(request)
+                )
+            )
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.text").value("I don't have access to weather data."))
+            .andExpect(jsonPath("$.conversationId").value("conv123"));
     }
 
     @Test
@@ -79,10 +88,15 @@ class LlmControllerTest {
         PromptRequest request = new PromptRequest("", "user123", null);
 
         // When & Then
-        mockMvc.perform(post("/api/llm/prompt")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest());
+        mockMvc
+            .perform(
+                post("/api/llm/prompt")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(request)
+                )
+            )
+            .andExpect(status()
+            .isBadRequest());
     }
 
     @Test
@@ -91,22 +105,32 @@ class LlmControllerTest {
         PromptRequest request = new PromptRequest("Hello", "", null);
 
         // When & Then
-        mockMvc.perform(post("/api/llm/prompt")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest());
+        mockMvc
+            .perform(
+                post("/api/llm/prompt")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(request)
+                )
+            )
+            .andExpect(status()
+            .isBadRequest());
     }
 
     @Test
     void shouldReturnNotFoundWhenConversationDoesNotExist() throws Exception {
         // Given
         PromptRequest request = new PromptRequest("Hello", "user123", "nonexistent");
-        when(conversationService.conversationExists("user123", "nonexistent")).thenReturn(false);
+        when(conversationService.conversationExists("user123", "nonexistent"))
+            .thenReturn(false);
 
         // When & Then
-        mockMvc.perform(post("/api/llm/prompt")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isNotFound());
+        mockMvc
+            .perform(
+                post("/api/llm/prompt")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(request)
+                )
+            )
+            .andExpect(status().isNotFound());
     }
 }

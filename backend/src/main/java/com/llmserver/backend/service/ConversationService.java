@@ -8,7 +8,6 @@ import com.llmserver.backend.entity.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
@@ -43,9 +42,11 @@ public class ConversationService {
             conversation.collection("messages").add(message).get();
             String conversationId = conversation.getId();
             
-            logger.info("Successfully created conversation", 
+            logger.info(
+                "Successfully created conversation", 
                 "conversationId", conversationId,
-                "userId", userId);
+                "userId", userId
+            );
             
             return conversationId;
 
@@ -62,10 +63,12 @@ public class ConversationService {
     @param message The message to add
     */
     public void addMessageToConversation(String userId, String conversationId, Message message) {
-        logger.debug("Adding message to conversation", 
+        logger.debug(
+            "Adding message to conversation", 
             "conversationId", conversationId,
             "userId", userId,
-            "role", message.role());
+            "role", message.role()
+        );
         
         try {
             firestore
@@ -80,9 +83,12 @@ public class ConversationService {
             logger.debug("Successfully added message to conversation");
 
         } catch (InterruptedException | ExecutionException e) {
-            logger.error("Failed to add message to conversation", 
+            logger.error(
+                "Failed to add message to conversation", 
                 "conversationId", conversationId,
-                "userId", userId, e);
+                "userId", userId,
+                e
+            );
             throw new RuntimeException("Failed to add message to conversation", e);
         }
     }
@@ -94,9 +100,11 @@ public class ConversationService {
     @return List of messages in chronological order
     */
     public List<Message> getConversationHistory(String userId, String conversationId) {
-        logger.debug("Retrieving conversation history", 
+        logger.debug(
+            "Retrieving conversation history", 
             "conversationId", conversationId,
-            "userId", userId);
+            "userId", userId
+        );
         
         try {
             List<QueryDocumentSnapshot> documents = firestore
@@ -116,15 +124,20 @@ public class ConversationService {
                 messages.add(message);
             }
             
-            logger.debug("Successfully retrieved conversation history", 
-                "messageCount", messages.size());
+            logger.debug(
+                "Successfully retrieved conversation history", 
+                "messageCount", messages.size()
+            );
             
             return messages;
 
         } catch (InterruptedException | ExecutionException e) {
-            logger.error("Failed to retrieve conversation history", 
+            logger.error(
+                "Failed to retrieve conversation history", 
                 "conversationId", conversationId,
-                "userId", userId, e);
+                "userId", userId,
+                e
+            );
             throw new RuntimeException("Failed to retrieve conversation history", e);
         }
     }
@@ -136,9 +149,11 @@ public class ConversationService {
     @return true if the conversation exists, false otherwise
     */
     public boolean conversationExists(String userId, String conversationId) {
-        logger.debug("Checking if conversation exists", 
+        logger.debug(
+            "Checking if conversation exists", 
             "conversationId", conversationId,
-            "userId", userId);
+            "userId", userId
+        );
         
         try {
             // .exists() returns False even on existing subcollections
@@ -161,9 +176,12 @@ public class ConversationService {
             return exists;
 
         } catch (InterruptedException | ExecutionException e) {
-            logger.error("Failed to check conversation existence", 
+            logger.error(
+                "Failed to check conversation existence", 
                 "conversationId", conversationId,
-                "userId", userId, e);
+                "userId", userId,
+                e
+            );
             throw new RuntimeException("Failed to check conversation existence", e);
         }
     }

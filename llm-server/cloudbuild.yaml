@@ -37,9 +37,10 @@ steps:
       - '--gpu-type=nvidia-l4'
       - '--max-instances=1'
       - '--memory=32Gi'
-      - '--timeout=180'
+      - '--timeout=300'
       - '--region=europe-west1'
       - '--no-cpu-throttling'
+      - '--cpu-boost'
       - '--clear-secrets'
     
 logsBucket: 'gs://llm-server-cloud-build-logs'
